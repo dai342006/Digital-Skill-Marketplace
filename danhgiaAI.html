@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minh Bạch Đánh Giá & AI Filter</title>
+    <!-- Import FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Import Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #Fdfbf7;
+            --primary-brown: #8D6E63;
+            --dark-brown: #5D4037;
+            --accent-gold: #D4A373;
+            --light-cream: #FFF8E1;
+            --success-green: #2E7D32;
+            --process-line: #E0E0E0;
+            --ai-color: #673AB7; /* Màu Tím cho AI */
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Container chính mô phỏng 1 Slide */
+        .slide-container {
+            background: white;
+            width: 900px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(93, 64, 55, 0.15);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            border-top: 8px solid var(--ai-color); /* Đổi màu viền trên sang Tím */
+        }
+
+        /* Header */
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header-title {
+            color: var(--dark-brown);
+            font-size: 2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header-subtitle {
+            color: var(--primary-brown);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Layout 2 cột */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Đảo ngược: Cột trái lớn (Flow), cột phải nhỏ (Key features) */
+            gap: 30px;
+        }
+        
+        /* Cột Phải: Key Features */
+        .legal-box {
+            background: linear-gradient(145deg, #fbfbfb, #f0f0f0);
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .legal-icon {
+            font-size: 3rem;
+            color: var(--ai-color); /* Icon màu Tím */
+            margin-bottom: 15px;
+        }
+
+        .legal-header {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark-brown);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--accent-gold);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .legal-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            text-align: left;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .legal-item i {
+            color: var(--ai-color); /* Icon màu Tím */
+            font-size: 1.2rem;
+        }
+
+        .legal-item span {
+            font-size: 0.9rem;
+            color: #4e342e;
+            font-weight: 600;
+        }
+
+        /* Cột Trái: AI Flow */
+        .flow-section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .flow-header {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--ai-color);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Sơ đồ ngang cho Flow */
+        .ai-flow-chart {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 20%;
+        }
+
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--light-cream);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: var(--ai-color);
+            margin-bottom: 10px;
+            border: 3px solid var(--ai-color);
+            box-shadow: 0 5px 15px rgba(103, 58, 183, 0.2);
+        }
+
+        .step-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--dark-brown);
+        }
+        
+        .step-desc {
+            font-size: 0.75rem;
+            color: #795548;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .flow-arrow {
+            font-size: 2rem;
+            color: var(--primary-brown);
+            margin: 0 10px;
+        }
+        
+        .flow-divider {
+            border-top: 2px dashed #D4A373;
+            margin: 20px 0;
+        }
+
+        /* Vùng Kết quả */
+        .result-box {
+            background: #E8EAF6; /* Light Blue/Tím nhạt */
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .result-box h4 {
+            color: #3F51B5; /* Blue đậm */
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .result-box p {
+            color: #5D4037;
+            font-size: 0.9rem;
+        }
+
+        .badge-safe {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--ai-color); /* Đổi màu badge sang Tím */
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="slide-container">
+        <div class="badge-safe"><i class="fa-solid fa-robot"></i> CÔNG NGHỆ LỌC</div>
+
+        <!-- Header -->
+        <div class="header-section">
+            <div class="header-title">
+                <i class="fa-solid fa-magnifying-glass-chart" style="color: var(--ai-color);"></i>
+                MINH BẠCH ĐÁNH GIÁ (AI FRAUD DETECTION)
+            </div>
+            <div class="header-subtitle">Đảm bảo điểm uy tín phản ánh đúng năng lực thực tế, chống thao túng</div>
+        </div>
+
+        <div class="content-grid">
+            
+            <!-- Cột Trái: AI Flow -->
+            <div class="flow-section">
+                <div class="flow-header">
+                    <i class="fa-solid fa-code-branch"></i>
+                    QUY TRÌNH ĐÁNH GIÁ & KIỂM ĐỊNH AI
+                </div>
+
+                <div class="ai-flow-chart">
+                    
+                    <div class="flow-step">
+                        <div class="step-icon"><i class="fa-solid fa-star"></i></div>
+                        <span class="step-label">1. Đánh Giá Khách Hàng</span>
+                        <span class="step-desc">Khách hàng nhập phản hồi và chấm điểm.</span>
+                    </div>
+
+                    <i class="fa-solid fa-arrow-right flow-arrow"></i>
+
+                    <div class="flow-step">
+                        <div class="step-icon"><i class="fa-solid fa-microchip"></i></div>
+                        <span class="step-label">2. AI Fraud Detection</span>
+                        <span class="step-desc">Hệ thống quét mô hình hành vi, IP, tần suất, và nội dung.</span>
+                    </div>
+
+                    <i class="fa-solid fa-arrow-right flow-arrow"></i>
+
+                    <div class="flow-step">
+                        <div class="step-icon" style="color: var(--success-green); border-color: var(--success-green);"><i class="fa-solid fa-shield-check"></i></div>
+                        <span class="step-label">3. Xác Thực Uy Tín</span>
+                        <span class="step-desc">Nếu an toàn, điểm được cập nhật công khai.</span>
+                    </div>
+                    
+                </div>
+                
+                <div class="flow-divider"></div>
+                
+                <div class="result-box">
+                    <h4>Vấn đề AI Giải Quyết:</h4>
+                    <p>Ngăn chặn hiệu quả các hành vi gian lận điểm số như **Mua bán Review**, **Spam Đánh giá**, **Tăng điểm ảo** và **Hạ uy tín đối thủ** một cách phi đạo đức.</p>
+                </div>
+
+            </div>
+
+            <!-- Cột Phải: Key Features -->
+            <div class="legal-box">
+                <div class="legal-icon">
+                    <i class="fa-solid fa-ranking-star"></i>
+                </div>
+                <div class="legal-header">CÁC YẾU TỐ TIÊU CHUẨN</div>
+                
+                <div class="legal-item">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Tạo niềm tin cho Khách hàng B2B</span>
+                </div>
+                <div class="legal-item">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Sàng lọc ứng viên kém chất lượng</span>
+                </div>
+                <div class="legal-item">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Cơ chế Report (Báo cáo vi phạm)</span>
+                </div>
+                <div class="legal-item">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Chỉ người đã thanh toán mới được Review</span>
+                </div>
+                
+                <div style="margin-top: 20px; font-size: 0.8rem; color: #888; font-style: italic;">
+                    *Điểm số là tài sản quan trọng nhất của Freelancer
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

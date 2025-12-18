@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Level Up & Năng Lực</title>
+    <!-- Import FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Import Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #Fdfbf7;
+            --primary-brown: #8D6E63;
+            --dark-brown: #5D4037;
+            --accent-gold: #D4A373;
+            --light-cream: #FFF8E1;
+            --level-color: #EF6C00; /* Màu Cam Đậm chủ đạo */
+            --level-light: #FFE0B2;
+            --text-color: #4E342E;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Container chính */
+        .slide-container {
+            background: white;
+            width: 900px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(93, 64, 55, 0.15);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            border-top: 8px solid var(--level-color);
+        }
+
+        /* Header */
+        .header-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            color: var(--dark-brown);
+            font-size: 2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header-subtitle {
+            color: var(--primary-brown);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Layout 2 cột: Cột Trái (Visual Levels) lớn, Cột Phải (Info) nhỏ */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2.2fr 1fr;
+            gap: 30px;
+            align-items: stretch;
+        }
+
+        /* --- VISUAL STAIRCASE SECTION (Left) --- */
+        .levels-visual {
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #eee;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* Căn đáy để tạo hiệu ứng bậc thang */
+            height: 380px;
+        }
+        
+        /* Background grid effect */
+        .levels-visual::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(#eee 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        .staircase {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 100%;
+            z-index: 1;
+            padding-bottom: 20px;
+        }
+
+        .step-col {
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            position: relative;
+            transition: transform 0.3s;
+        }
+        
+        .step-col:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Khối hộp đại diện cho từng Level */
+        .step-block {
+            width: 100%;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        
+        /* Level 1 */
+        .lv1 { height: 140px; background: linear-gradient(to top, #90A4AE, #B0BEC5); }
+        /* Level 2 */
+        .lv2 { height: 220px; background: linear-gradient(to top, #FFB74D, #FF9800); }
+        /* Level 3 */
+        .lv3 { height: 300px; background: linear-gradient(to top, #EF6C00, #E65100); }
+
+        .step-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0.2);
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .step-title {
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .step-req {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        /* Mũi tên chỉ dẫn */
+        .arrow-up {
+            position: absolute;
+            bottom: 50px;
+            right: -25px;
+            font-size: 1.5rem;
+            color: #ddd;
+            z-index: 2;
+        }
+        
+        .start-label {
+            position: absolute;
+            bottom: -30px;
+            font-weight: 700;
+            color: var(--primary-brown);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        /* --- INFO SECTION (Right) --- */
+        .info-box {
+            background: linear-gradient(145deg, #fff3e0, #ffe0b2);
+            border: 2px solid #ffcc80;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .info-icon {
+            font-size: 3rem;
+            color: var(--level-color);
+            margin-bottom: 15px;
+        }
+
+        .info-header {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #E65100;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #E65100;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .benefit-item {
+            text-align: left;
+            margin-bottom: 15px;
+            background: rgba(255,255,255,0.6);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .benefit-item h5 {
+            margin: 0 0 5px 0;
+            color: #BF360C;
+            font-size: 0.9rem;
+        }
+
+        .benefit-item p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #5D4037;
+        }
+
+        .badge-safe {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--level-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="slide-container">
+        <div class="badge-safe"><i class="fa-solid fa-chart-line"></i> THĂNG TIẾN SỰ NGHIỆP</div>
+
+        <!-- Header -->
+        <div class="header-section">
+            <div class="header-title">
+                <i class="fa-solid fa-layer-group" style="color: var(--level-color);"></i>
+                HỆ THỐNG CẤP ĐỘ & NĂNG LỰC
+            </div>
+            <div class="header-subtitle">Lộ trình thăng tiến công bằng dựa trên năng lực thực tế & bài Test</div>
+        </div>
+
+        <div class="content-grid">
+            
+            <!-- Cột Trái: Visual Staircase -->
+            <div class="levels-visual">
+                
+                <div class="staircase">
+                    
+                    <!-- Step 1: Entry -->
+                    <div class="step-col">
+                        <div class="step-block lv1">
+                            <div class="step-icon"><i class="fa-solid fa-pen-to-square"></i></div>
+                            <div class="step-title">Tier 1<br>Newbie</div>
+                            <div class="step-req">
+                                • Đạt Bài Test 100%<br>
+                                • Xác thực danh tính
+                            </div>
+                        </div>
+                        <span class="start-label">Khởi đầu</span>
+                        <i class="fa-solid fa-angle-right arrow-up"></i>
+                    </div>
+
+                    <!-- Step 2: Professional -->
+                    <div class="step-col">
+                        <div class="step-block lv2">
+                            <div class="step-icon"><i class="fa-solid fa-briefcase"></i></div>
+                            <div class="step-title">Tier 2<br>Pro</div>
+                            <div class="step-req">
+                                • Hoàn thành 5+ dự án<br>
+                                • Đánh giá > 4.5 sao<br>
+                                • Không vi phạm
+                            </div>
+                        </div>
+                        <span class="start-label">Chuyên nghiệp</span>
+                        <i class="fa-solid fa-angle-right arrow-up"></i>
+                    </div>
+
+                    <!-- Step 3: Expert -->
+                    <div class="step-col">
+                        <div class="step-block lv3">
+                            <div class="step-icon"><i class="fa-solid fa-crown"></i></div>
+                            <div class="step-title">Tier 3<br>Expert</div>
+                            <div class="step-req">
+                                • Doanh thu cao<br>
+                                • 100% Khách hài lòng<br>
+                                • Huy hiệu "Verified"
+                            </div>
+                        </div>
+                        <span class="start-label">Chuyên gia</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Cột Phải: Benefits -->
+            <div class="info-box">
+                <div class="info-icon">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+                <div class="info-header">GIÁ TRỊ MANG LẠI</div>
+                
+                <div class="benefit-item">
+                    <h5><i class="fa-solid fa-scale-balanced"></i> Sự Công Bằng</h5>
+                    <p>Người mới có cơ hội nếu vượt qua bài Test, không chỉ dựa vào quan hệ.</p>
+                </div>
+
+                <div class="benefit-item">
+                    <h5><i class="fa-solid fa-bolt"></i> Động Lực</h5>
+                    <p>Thúc đẩy Freelancer liên tục học tập để thăng hạng và tăng thu nhập.</p>
+                </div>
+
+                <div class="benefit-item">
+                    <h5><i class="fa-solid fa-filter"></i> Chất Lượng</h5>
+                    <p>Giúp Khách hàng lọc ngay được ứng viên Top đầu cho dự án lớn.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

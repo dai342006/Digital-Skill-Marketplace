@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigitalSkill - Trang Chủ (Dashboard)</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for responsiveness and clean look */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* Blue Gray 100 */
+        }
+        /* Style cho Sidebar */
+        .sidebar {
+            width: 280px;
+            transition: transform 0.3s ease-in-out;
+            z-index: 20;
+        }
+        /* Mobile: Ẩn sidebar theo mặc định */
+        @media (max-width: 1023px) {
+            .sidebar {
+                transform: translateX(-280px);
+                position: fixed;
+                height: 100%;
+                top: 0;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .content-area {
+                margin-left: 0 !important;
+            }
+        }
+        /* Desktop: Hiển thị sidebar */
+        @media (min-width: 1024px) {
+            .sidebar {
+                transform: translateX(0);
+                position: sticky;
+                top: 0;
+                height: 100vh; /* Chiều cao đầy đủ của viewport */
+            }
+            .content-area {
+                margin-left: 280px; /* Tạo khoảng trống cho sidebar */
+            }
+        }
+
+        /* Active link styling */
+        .nav-link.active {
+            background-color: #e0f2fe; /* Sky 100 */
+            color: #0c4a6e; /* Sky 800 */
+            font-weight: 600;
+        }
+        .nav-link.active svg {
+            color: #0c4a6e;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Overlay cho mobile khi sidebar mở -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-10 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- --- SIDEBAR (Navigation) --- -->
+    <aside id="sidebar" class="sidebar bg-white shadow-xl lg:shadow-md h-full flex flex-col p-4 border-r border-gray-100">
+        
+        <!-- Logo -->
+        <div class="p-4 border-b mb-6">
+            <h1 class="text-3xl font-extrabold text-indigo-600 tracking-tight">DigitalSkill</h1>
+            <!-- Dòng "Nền tảng kỹ năng số 4.0" đã được xóa theo yêu cầu trước đó -->
+        </div>
+
+        <!-- Menu chính -->
+        <nav class="flex-grow space-y-2">
+            <!-- Link active -->
+            <a href="#" class="nav-link active flex items-center p-3 rounded-xl transition duration-150">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-sky-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 001 1h3m-6-10v8a1 1 0 001 1h2a1 1 0 001-1v-8m-6 0h6" />
+                </svg>
+                Tổng quan 
+            </a>
+            
+            <a href="#" class="nav-link flex items-center p-3 rounded-xl text-gray-700 hover:bg-gray-50 transition duration-150">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Dịch vụ của tôi 
+            </a>
+            
+            <a href="#" class="nav-link flex items-center p-3 rounded-xl text-gray-700 hover:bg-gray-50 transition duration-150">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+                Quản lý đơn hàng <span class="ml-auto bg-red-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">3</span>
+            </a>
+            
+            <a href="#" class="nav-link flex items-center p-3 rounded-xl text-gray-700 hover:bg-gray-50 transition duration-150">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                Ví tiền (Thanh toán)
+            </a>
+            
+            <a href="#" class="nav-link flex items-center p-3 rounded-xl text-gray-700 hover:bg-gray-50 transition duration-150">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636l-3.536 3.536m0 0A7.202 7.202 0 0110.5 20.25a7.202 7.202 0 01-4.757-1.47l-3.535 3.536m3.535-3.536l3.536-3.536m0 0A7.202 7.202 0 003.75 10.5c0-3.17.97-6.208 2.757-8.77l3.535 3.536M18 10.5a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z" />
+                </svg>
+                Trung tâm hỗ trợ
+            </a>
+        </nav>
+        
+        <!-- Footer Menu (Settings/Logout) -->
+        <div class="mt-8 border-t pt-4 space-y-2">
+            <a href="#" class="nav-link flex items-center p-3 rounded-xl text-gray-700 hover:bg-gray-50 transition duration-150">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z" />
+                </svg>
+                Cài đặt & Bảo mật
+            </a>
+            <a href="#" class="nav-link flex items-center p-3 rounded-xl text-gray-700 hover:bg-gray-50 transition duration-150">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Đăng xuất
+            </a>
+        </div>
+
+    </aside>
+
+    <!-- --- MAIN CONTENT AREA --- -->
+    <div class="content-area min-h-screen pt-4 lg:pt-0 pb-10">
+
+        <!-- Header Bar (Fixed on Mobile, part of content on Desktop) -->
+        <header class="sticky top-0 lg:static bg-white shadow-md lg:shadow-none p-4 lg:p-6 z-10">
+            <div class="flex justify-between items-center">
+                <!-- Hamburger Menu cho Mobile -->
+                <button id="sidebar-toggle-btn" class="lg:hidden text-gray-700 hover:text-indigo-600 mr-4" onclick="toggleSidebar()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                
+                <h2 class="text-2xl font-bold text-gray-800 hidden lg:block">Tổng quan hoạt động</h2>
+                <h2 class="text-xl font-bold text-gray-800 lg:hidden"></h2>
+
+                <!-- User/Actions -->
+                <div class="flex items-center space-x-4">
+                    <!-- Nút Tạo Dịch Vụ Mới -->
+                    <button class="bg-indigo-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 shadow-md hidden sm:block">
+                        + Tạo Dịch Vụ Mới
+                    </button>
+                    <!-- Icon Thông báo -->
+                    <div class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-500 hover:text-indigo-600 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        <span class="absolute top-0 right-0 block h-3 w-3 rounded-full ring-2 ring-white bg-red-500"></span>
+                    </div>
+                    <!-- Avatar & Tên (Desktop) -->
+                    <div class="items-center space-x-2 hidden lg:flex">
+                        <span class="text-sm font-medium text-gray-800">Nguyễn Văn A</span>
+                        <div class="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white text-base font-semibold border-2 border-indigo-200">
+                            A
+                        </div>
+                    </div>
+                    <!-- Nút Mobile (thay cho Tạo Dịch Vụ) -->
+                     <button class="bg-indigo-600 text-white text-sm font-semibold px-3 py-1.5 rounded-lg hover:bg-indigo-700 transition duration-200 shadow-md sm:hidden">
+                        + Tạo mới
+                    </button>
+                </div>
+            </div>
+        </header>
+
+
+        <!-- Content Grid -->
+        <main class="p-4 lg:p-6 max-w-full">
+            
+            <!-- Welcome Banner (Đã sửa lời chào) -->
+            <div class="bg-indigo-600 text-white p-6 rounded-2xl shadow-xl mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                <div>
+                    <h3 class="text-2xl font-bold mb-1">Xin chào, Nguyễn Văn A!</h3>
+                    <p class="text-indigo-200 text-sm">Cùng kiểm tra tiến độ công việc và thu nhập hôm nay nào.</p>
+                </div>
+                <button class="bg-white text-indigo-600 font-semibold px-4 py-2 rounded-lg hover:bg-indigo-100 transition duration-200 mt-3 sm:mt-0 shadow-md">
+                    Xem hồ sơ cá nhân
+                </button>
+            </div>
+
+
+            <!-- Thống kê Tóm tắt (Summary Stats) -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                
+                <!-- Card 1: Thu nhập (Đã cập nhật số liệu) -->
+                <div class="bg-white p-5 rounded-xl shadow-lg border-b-4 border-green-500">
+                    <p class="text-sm text-gray-500 font-medium mb-1">Thu nhập (Tháng này)</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-extrabold text-gray-800">16.800.000 VNĐ</span> <!-- SỐ LIỆU ĐÃ ĐƯỢC CẬP NHẬT -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V6m0 12v-2" />
+                        </svg>
+                    </div>
+                    <p class="text-xs text-green-600 mt-2 font-medium flex items-center">
+                        <span class="mr-1">▲ 12.5%</span> so với tháng trước
+                    </p>
+                </div>
+
+                <!-- Card 2: Đơn hàng mới -->
+                <div class="bg-white p-5 rounded-xl shadow-lg border-b-4 border-blue-500">
+                    <p class="text-sm text-gray-500 font-medium mb-1">Đơn hàng mới</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-extrabold text-gray-800">3 đơn</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                        </svg>
+                    </div>
+                    <p class="text-xs text-blue-600 mt-2 font-medium flex items-center">
+                        <span class="mr-1">Tăng 1 đơn</span> so với tuần trước
+                    </p>
+                </div>
+
+                <!-- Card 3: Đang thực hiện -->
+                <div class="bg-white p-5 rounded-xl shadow-lg border-b-4 border-yellow-500">
+                    <p class="text-sm text-gray-500 font-medium mb-1">Đang thực hiện</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-extrabold text-gray-800">7 dự án</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <p class="text-xs text-yellow-600 mt-2 font-medium flex items-center">
+                        <span class="mr-1">1 dự án</span> sắp đến hạn
+                    </p>
+                </div>
+
+                <!-- Card 4: Tỉ lệ hoàn thành -->
+                <div class="bg-white p-5 rounded-xl shadow-lg border-b-4 border-indigo-500">
+                    <p class="text-sm text-gray-500 font-medium mb-1">Tỉ lệ hài lòng</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-extrabold text-gray-800">98.5%</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <p class="text-xs text-indigo-600 mt-2 font-medium flex items-center">
+                        <span class="mr-1">Tuyệt vời!</span> Cố gắng duy trì.
+                    </p>
+                </div>
+
+            </div>
+            
+            <!-- Danh sách công việc gần đây -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg">
+                <div class="flex justify-between items-center mb-4 border-b pb-3">
+                    <h3 class="text-xl font-bold text-gray-800">Đơn hàng đang hoạt động (7)</h3>
+                    <a href="#" class="text-sm text-indigo-600 font-medium hover:text-indigo-800 transition duration-150">Xem tất cả</a>
+                </div>
+
+                <!-- Danh sách công việc (Job List) -->
+                <div id="job-list" class="space-y-4">
+                    <!-- Dữ liệu sẽ được render bởi JS -->
+                </div>
+
+            </div>
+
+
+        </main>
+    </div>
+
+    <!-- --- JAVASCRIPT LOGIC --- -->
+    <script>
+        // Dữ liệu giả lập cho các đơn hàng/dịch vụ
+        const activeJobs = [
+            { id: 1001, title: 'Thiết kế Logo thương hiệu mới', client: 'Công ty ABC', status: 'Đang làm', progress: 65, deadline: '20/12/2025', price: '4.500.000 VNĐ' },
+            { id: 1002, title: 'Viết bài SEO cho 5 chủ đề', client: 'Agency Marketing X', status: 'Cần phản hồi', progress: 90, deadline: '05/12/2025', price: '2.000.000 VNĐ' },
+            { id: 1003, title: 'Lập trình tính năng đăng nhập', client: 'Startup Z', status: 'Mới nhận', progress: 5, deadline: '30/12/2025', price: '8.000.000 VNĐ' },
+            { id: 1004, title: 'Chỉnh sửa video quảng cáo', client: 'Kênh Youtube V', status: 'Hoàn thành', progress: 100, deadline: 'Hôm nay', price: '1.500.000 VNĐ' },
+        ];
+
+        // Lấy các phần tử DOM cần thiết
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        const jobListContainer = document.getElementById('job-list');
+
+        // Hàm chuyển đổi trạng thái Sidebar (cho mobile)
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+            sidebarOverlay.classList.toggle('hidden');
+        }
+
+        // Hàm render danh sách công việc
+        function renderJobs() {
+            jobListContainer.innerHTML = activeJobs.map(job => {
+                let statusClass = '';
+                let statusText = '';
+                let progressColor = '';
+                
+                if (job.status === 'Đang làm') {
+                    statusClass = 'bg-blue-100 text-blue-700 border-blue-300';
+                    statusText = 'Đang tiến hành';
+                    progressColor = 'bg-blue-500';
+                } else if (job.status === 'Cần phản hồi') {
+                    statusClass = 'bg-yellow-100 text-yellow-700 border-yellow-300';
+                    statusText = 'Chờ Khách hàng';
+                    progressColor = 'bg-yellow-500';
+                } else if (job.status === 'Mới nhận') {
+                    statusClass = 'bg-green-100 text-green-700 border-green-300';
+                    statusText = 'Mới nhận';
+                    progressColor = 'bg-green-500';
+                } else if (job.status === 'Hoàn thành') {
+                    statusClass = 'bg-gray-100 text-gray-500 border-gray-300';
+                    statusText = 'Đã hoàn thành';
+                    progressColor = 'bg-gray-500';
+                }
+
+                return `
+                    <div class="job-card bg-white p-4 sm:p-5 rounded-xl border border-gray-200 hover:shadow-lg transition duration-200 cursor-pointer flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                        <!-- Cột Nội dung chính -->
+                        <div class="sm:w-3/5 mb-3 sm:mb-0">
+                            <p class="text-xs font-medium text-gray-500">${job.client}</p>
+                            <h4 class="text-lg font-semibold text-gray-800 hover:text-indigo-600 transition duration-150">${job.title}</h4>
+                            <div class="flex items-center mt-2 space-x-2">
+                                <span class="text-xs font-semibold px-3 py-1 rounded-full border ${statusClass}">${statusText}</span>
+                                <span class="text-xs text-gray-500">Hạn chót: <span class="font-medium text-red-500">${job.deadline}</span></span>
+                            </div>
+                        </div>
+
+                        <!-- Cột Tiến độ & Giá -->
+                        <div class="sm:w-2/5 flex flex-col sm:flex-row sm:items-center justify-end sm:space-x-8 w-full">
+                            <!-- Tiến độ -->
+                            <div class="w-full sm:w-1/2 mb-3 sm:mb-0">
+                                <p class="text-sm font-medium text-gray-700 mb-1">Tiến độ (${job.progress}%)</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="h-2.5 rounded-full ${progressColor}" style="width: ${job.progress}%"></div>
+                                </div>
+                            </div>
+
+                            <!-- Giá -->
+                            <div class="text-right sm:w-1/3">
+                                <span class="text-lg font-bold text-green-600">${job.price}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Khởi tạo ứng dụng khi DOM đã tải xong
+        document.addEventListener('DOMContentLoaded', () => {
+            renderJobs();
+        });
+    </script>
+</body>
+</html>

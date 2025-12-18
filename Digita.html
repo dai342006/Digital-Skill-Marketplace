@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillMarket - Mobile Prototype (HTML)</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for responsiveness and modal animation */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+        /* Keyframes for simple modal animation */
+        @keyframes bounce-in {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-bounce-in {
+            animation: bounce-in 0.2s ease-out forwards;
+        }
+        .shadow-lg-top {
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50 text-slate-800 pb-20">
+
+    <!-- --- HEADER / NAVIGATION --- -->
+    <header class="bg-indigo-600 text-white p-4 sticky top-0 z-50 shadow-md">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="bg-white p-1 rounded-lg">
+                    <!-- Icon: Zap -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                </div>
+                <span class="font-bold text-lg">SkillMarket</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <!-- Icon: Bell -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 cursor-pointer hover:text-indigo-200"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+                    <span class="absolute -top-1 -right-1 bg-red-500 text-xs rounded-full w-4 h-4 flex items-center justify-center">2</span>
+                </div>
+                <div class="w-8 h-8 bg-indigo-400 rounded-full flex items-center justify-center border-2 border-white">
+                    <!-- Icon: User -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- --- BODY CONTENT --- -->
+    <main class="max-w-md mx-auto">
+        
+        <!-- Section: User Stats (Gamification - Level System) -->
+        <div class="bg-white p-4 mb-2 shadow-sm rounded-b-xl">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="font-bold text-gray-700" id="user-greeting">Xin chào, Nguyễn Văn A!</h2> 
+                <span class="text-xs font-semibold bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full border border-yellow-300">
+                    Level 5: Expert
+                </span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-200">
+                <div class="bg-indigo-600 h-2.5 rounded-full" style="width: 70%;"></div>
+            </div>
+            <p class="text-xs text-gray-500 mt-1 text-right">Còn 300xp để lên hạng Master</p>
+        </div>
+
+        <!-- Section: Search & AI Toggle -->
+        <div class="px-4 mt-4">
+            <div class="relative">
+                <input 
+                    type="text" 
+                    placeholder="Tìm việc làm..." 
+                    class="w-full p-3 pl-10 rounded-xl border border-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                <!-- Icon: Search -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-3 text-gray-400 w-5 h-5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                
+                <!-- Nút giả lập bật tắt AI -->
+                <div class="absolute right-2 top-2">
+                    <span class="flex items-center space-x-1 bg-indigo-50 text-indigo-700 text-xs px-2 py-1 rounded-md border border-indigo-100 cursor-pointer hover:bg-indigo-100">
+                        <!-- Icon: Zap -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="w-3 h-3"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                        <span>AI Match: ON</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Filters (Bộ lọc nhanh) -->
+        <div class="flex px-4 mt-4 space-x-2 overflow-x-auto pb-2 hide-scrollbar">
+            <button class="bg-indigo-600 text-white px-4 py-1.5 rounded-full text-sm whitespace-nowrap shadow-md">Tất cả</button>
+            <button class="bg-red-50 text-red-600 border border-red-200 px-4 py-1.5 rounded-full text-sm font-medium flex items-center whitespace-nowrap">
+                <!-- Icon: Zap -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3 mr-1"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                SOS Khẩn cấp
+            </button>
+            <button class="bg-white text-gray-600 border border-gray-200 px-4 py-1.5 rounded-full text-sm whitespace-nowrap">Verified Client</button>
+        </div>
+
+        <!-- Section: Job List (Danh sách việc làm) -->
+        <div class="px-4 mt-2 space-y-4">
+            <h3 class="font-bold text-gray-700 text-sm uppercase tracking-wide mt-4 mb-2">Việc phù hợp nhất (AI)</h3>
+            
+            <!-- Job items will be rendered here by JavaScript -->
+            <div id="jobs-list-container">
+                <!-- Job Cards -->
+            </div>
+        </div>
+    </main>
+
+    <!-- --- BOTTOM NAVIGATION (Thanh điều hướng dưới) --- -->
+    <nav class="fixed bottom-0 w-full max-w-md bg-white border-t border-gray-200 flex justify-around py-3 z-40 left-0 right-0 mx-auto shadow-lg-top">
+        <!-- Item 1: Tìm việc (Active) -->
+        <div id="nav-jobs" class="flex flex-col items-center text-indigo-600 cursor-pointer">
+            <!-- Icon: Search -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span class="text-[10px] font-medium mt-1">Tìm việc</span>
+        </div>
+        <!-- Item 2: Hợp đồng -->
+        <div class="flex flex-col items-center text-gray-400 cursor-pointer hover:text-indigo-500">
+            <!-- Icon: FileText -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+            <span class="text-[10px] font-medium mt-1">Hợp đồng</span>
+        </div>
+        <!-- Item 3: Ví Escrow -->
+        <div class="flex flex-col items-center text-gray-400 cursor-pointer hover:text-indigo-500">
+            <!-- Icon: Shield -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span class="text-[10px] font-medium mt-1">Ví Escrow</span>
+        </div>
+        <!-- Item 4: Hồ sơ -->
+        <div class="flex flex-col items-center text-gray-400 cursor-pointer hover:text-indigo-500">
+            <!-- Icon: User -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span class="text-[10px] font-medium mt-1">Hồ sơ</span>
+        </div>
+    </nav>
+
+    <!-- --- MODAL: SMART CONTRACT SIMULATION (Mô phỏng tạo hợp đồng) --- -->
+    <div id="contract-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 items-center justify-center p-4 backdrop-blur-sm transition-opacity hidden">
+        <div id="modal-content" class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl relative">
+            
+            <!-- Modal content dynamically generated by JS -->
+            
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu giả lập các công việc
+        const jobs = [
+            {
+                id: 1,
+                title: "Cần thiết kế Logo quán Cafe gấp",
+                client: "Cafe Mộc - Đã xác thực",
+                budget: "2.000.000 đ",
+                tags: ["SOS", "Thiết kế"],
+                isSos: true,
+                matchScore: 98,
+                postedTime: "10 phút trước"
+            },
+            {
+                id: 2,
+                title: "Viết bài chuẩn SEO chủ đề Bất động sản",
+                client: "LandGroup",
+                budget: "500.000 đ / bài",
+                tags: ["Content", "Escrow"],
+                isSos: false,
+                matchScore: 85,
+                postedTime: "2 giờ trước"
+            },
+            {
+                id: 3,
+                title: "Fix lỗi CSS trang chủ website bán hàng",
+                client: "Shop Thời Trang A",
+                budget: "1.500.000 đ",
+                tags: ["SOS", "IT/Dev"],
+                isSos: true,
+                matchScore: 92,
+                postedTime: "30 phút trước"
+            }
+        ];
+
+        let selectedJob = null;
+        let processingStep = 0; // 0: none, 1: AI Check, 2: Contract, 3: Done
+        const userName = "Nguyễn Văn A";
+
+        const jobsListContainer = document.getElementById('jobs-list-container');
+        const contractModal = document.getElementById('contract-modal');
+        const modalContent = document.getElementById('modal-content');
+
+        // Hàm render danh sách công việc
+        function renderJobs() {
+            jobsListContainer.innerHTML = jobs.map(job => {
+                const isSosClass = job.isSos ? 'border-l-4 border-l-red-500' : 'border-l-4 border-l-green-500';
+                
+                // SVG Icons (User, Clock, Shield)
+                const userIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3 mr-1"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
+                const clockIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3 mr-1"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>';
+                const shieldIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3 mr-1"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>';
+                
+                const tagsHtml = job.tags.map(tag => {
+                    const tagClass = tag === 'SOS' ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600';
+                    return `<span class="text-xs px-2 py-1 rounded-md font-medium ${tagClass}">${tag}</span>`;
+                }).join('');
+
+                const cardHtml = `
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 relative overflow-hidden transition-all hover:shadow-md ${isSosClass}">
+                        
+                        <!-- AI Match Badge -->
+                        <div class="absolute top-0 right-0 bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded-bl-lg">
+                            ${job.matchScore}% Phù hợp
+                        </div>
+
+                        <div class="flex justify-between items-start mb-2 pr-16">
+                            <h4 class="font-bold text-gray-800 leading-snug">${job.title}</h4>
+                        </div>
+                        
+                        <div class="flex items-center text-xs text-gray-500 mb-3">
+                            ${userIcon} ${job.client}
+                            <span class="mx-2">•</span>
+                            ${clockIcon} ${job.postedTime}
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            ${tagsHtml}
+                            <!-- Escrow Badge -->
+                            <span class="flex items-center text-xs px-2 py-1 rounded-md bg-green-50 text-green-700 font-medium border border-green-100">
+                                ${shieldIcon} Escrow Đảm bảo
+                            </span>
+                        </div>
+
+                        <div class="flex justify-between items-center pt-2 border-t border-gray-50 mt-2">
+                            <span class="font-bold text-indigo-600 text-lg">${job.budget}</span>
+                            <button 
+                                data-job-id="${job.id}"
+                                class="btn-apply bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-sm transition-colors flex items-center"
+                            >
+                                Nhận việc
+                            </button>
+                        </div>
+                    </div>
+                `;
+                return cardHtml;
+            }).join('');
+            
+            // Re-attach event listeners after rendering
+            document.querySelectorAll('.btn-apply').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const jobId = parseInt(e.currentTarget.getAttribute('data-job-id'));
+                    const job = jobs.find(j => j.id === jobId);
+                    handleApply(job);
+                });
+            });
+        }
+
+        // Hàm render nội dung Modal theo từng bước
+        function renderModal() {
+            modalContent.innerHTML = '';
+            let contentHtml = '';
+
+            // Close button (always present)
+            const closeButton = `
+                <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600">
+                    ✕
+                </button>
+            `;
+
+            if (processingStep === 1) {
+                // Step 1: AI Checking
+                contentHtml = `
+                    <div class="text-center py-8">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+                        <h3 class="font-bold text-lg text-gray-800">AI đang phân tích...</h3>
+                        <p class="text-gray-500 text-sm mt-2">Đang kiểm tra độ phù hợp hồ sơ và lịch sử tín nhiệm.</p>
+                    </div>
+                `;
+            } else if (processingStep === 2) {
+                // Step 2: Contract Generation
+                const fileTextIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-indigo-600"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>';
+                const shieldIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3 mr-1 fill-current"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>';
+
+                contentHtml = `
+                    <div class="text-center py-4">
+                        <div class="mx-auto bg-indigo-50 w-16 h-16 rounded-full flex items-center justify-center mb-4 animate-pulse">
+                            ${fileTextIcon}
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-800">Tạo Hợp đồng thông minh</h3>
+                        <p class="text-gray-500 text-sm mt-2 mb-4">Hệ thống đang tự động điền thông tin pháp lý...</p>
+                        <div class="space-y-2 text-left bg-gray-50 p-3 rounded-lg text-xs text-gray-600 mb-4 border border-gray-200">
+                            <div class="flex justify-between"><span>Bên A:</span> <span class="font-bold">${selectedJob?.client}</span></div>
+                            <div class="flex justify-between"><span>Bên B:</span> <span class="font-bold">${userName} </span></div> 
+                            <div class="flex justify-between"><span>Giá trị:</span> <span class="font-bold text-indigo-600">${selectedJob?.budget}</span></div>
+                            <div class="flex justify-between items-center text-green-600 font-bold mt-1 pt-1 border-t border-gray-200">
+                                ${shieldIcon} Đã khóa tiền vào Escrow
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (processingStep === 3) {
+                // Step 3: Success
+                const checkCircleIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-green-600"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
+
+                contentHtml = `
+                    <div class="text-center py-4">
+                        <div class="mx-auto bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+                            ${checkCircleIcon}
+                        </div>
+                        <h3 class="font-bold text-xl text-gray-800">Nhận việc thành công!</h3>
+                        <p class="text-gray-600 text-sm mt-2 mb-6">
+                            Tiền đã được giữ an toàn trong ví Escrow. Hãy bắt đầu làm việc và nộp sản phẩm đúng hạn nhé.
+                        </p>
+                        <button 
+                            onclick="closeModal()"
+                            class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 shadow-lg transition-transform active:scale-95"
+                        >
+                            Vào Chat với khách hàng
+                        </button>
+                    </div>
+                `;
+            }
+
+            modalContent.innerHTML = contentHtml + closeButton;
+            modalContent.classList.add('animate-bounce-in');
+        }
+
+        // Hàm hiển thị Modal
+        function showModal() {
+            contractModal.classList.remove('hidden');
+            contractModal.classList.add('flex');
+            renderModal();
+        }
+
+        // Hàm đóng Modal
+        function closeModal() {
+            contractModal.classList.remove('flex');
+            contractModal.classList.add('hidden');
+            processingStep = 0;
+            selectedJob = null;
+        }
+
+        // Hàm xử lý khi bấm "Nhận việc ngay"
+        function handleApply(job) {
+            selectedJob = job;
+            processingStep = 1;
+            showModal();
+
+            // Giả lập quá trình xử lý AI (1.5s)
+            setTimeout(() => {
+                processingStep = 2;
+                if (contractModal.classList.contains('flex')) {
+                    renderModal();
+                }
+            }, 1500); 
+            
+            // Giả lập hoàn tất (3.5s tổng cộng)
+            setTimeout(() => {
+                processingStep = 3;
+                if (contractModal.classList.contains('flex')) {
+                    renderModal();
+                }
+            }, 3500); 
+        }
+
+        // Khởi tạo ứng dụng khi DOM đã tải xong
+        document.addEventListener('DOMContentLoaded', () => {
+            renderJobs();
+            // Cập nhật lời chào (nếu cần)
+            document.getElementById('user-greeting').textContent = `Xin chào, ${userName}!`;
+        });
+    </script>
+</body>
+</html>

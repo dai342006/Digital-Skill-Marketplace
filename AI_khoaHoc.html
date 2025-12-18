@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigitalSkill - Dashboard Toàn Diện</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        
+        /* Sidebar Transition */
+        .sidebar { width: 280px; transition: transform 0.3s ease-in-out; z-index: 30; position: fixed; height: 100%; top: 0; }
+        @media (max-width: 1023px) {
+            .sidebar { transform: translateX(-280px); }
+            .sidebar.open { transform: translateX(0); box-shadow: 4px 0 6px -1px rgba(0,0,0,0.1); }
+            .content-area { margin-left: 0 !important; }
+        }
+        @media (min-width: 1024px) {
+            .content-area { margin-left: 280px; }
+        }
+
+        /* Animations */
+        @keyframes bounce-in { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .animate-bounce-in { animation: bounce-in 0.2s ease-out forwards; }
+        
+        /* Element Styles */
+        .nav-link.active { background-color: #4f46e5; color: white; box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.4); }
+        .nav-link:not(.active):hover { background-color: #f3f4f6; color: #111827; }
+        
+        .content-tab.active { border-bottom-color: #4f46e5; color: #4f46e5; }
+        .content-tab:not(.active) { border-bottom-color: transparent; color: #6b7280; }
+        
+        .card-hover:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        
+        /* AI Processing Bar */
+        .processing-bar { height: 6px; background-color: #e5e7eb; border-radius: 999px; overflow: hidden; }
+        .processing-fill { height: 100%; transition: width 0.5s ease-in-out; border-radius: 999px; }
+    </style>
+</head>
+<body>
+
+    <!-- Overlay Mobile -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black opacity-0 lg:hidden transition-opacity duration-300 pointer-events-none z-20" onclick="toggleSidebar()"></div>
+
+    <!-- --- SIDEBAR --- -->
+    <aside id="sidebar" class="sidebar bg-white shadow-xl border-r border-gray-200 flex flex-col">
+        <div class="p-6 border-b border-gray-100 flex items-center space-x-2">
+            <div class="bg-indigo-600 p-1.5 rounded-lg"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+            <h1 class="text-2xl font-bold text-gray-800 tracking-tight">DigitalSkill</h1>
+        </div>
+        
+        <nav class="flex-grow p-4 space-y-2 overflow-y-auto">
+            <button onclick="switchMainView('jobs')" class="nav-link active w-full flex items-center space-x-3 p-3 rounded-xl font-medium transition duration-150" id="nav-jobs">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-1.282-8.455-3.245M5.253 17.658A9.993 9.993 0 0112 20c2.729 0 5.305-.71 7.424-2.028M12 4v1m0 16v1m-7-14h1m14 0h1M4 12H3m18 0h-1M6.343 6.343l.707.707m12.02-.02l-.707.707M6.343 17.657l.707-.707m12.02.02l-.707-.707"/></svg>
+                <span>Tìm Việc (AI Gợi ý)</span>
+            </button>
+            
+            <button onclick="switchMainView('courses')" class="nav-link w-full flex items-center space-x-3 p-3 rounded-xl font-medium text-gray-600 transition duration-150" id="nav-courses">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                <span>Khóa Học & Đào Tạo</span>
+            </button>
+
+            <button class="nav-link w-full flex items-center space-x-3 p-3 rounded-xl font-medium text-gray-600 transition duration-150">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                <span>Quản Lý Hợp Đồng</span>
+            </button>
+        </nav>
+
+        <div class="p-4 border-t border-gray-200">
+            <div class="bg-gray-50 p-3 rounded-xl flex items-center space-x-3 mb-2">
+                <img src="https://placehold.co/40x40/6366f1/ffffff?text=A" class="w-10 h-10 rounded-full bg-indigo-100">
+                <div>
+                    <p class="text-sm font-bold text-gray-800">Nguyễn Văn A</p>
+                    <p class="text-xs text-gray-500">Level 5 • Expert</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- --- MAIN CONTENT --- -->
+    <main class="content-area min-h-screen pb-10 transition-all duration-300">
+        
+        <!-- Header Mobile -->
+        <header class="sticky top-0 bg-white/90 backdrop-blur-md shadow-sm z-20 px-4 py-3 flex justify-between items-center lg:hidden">
+            <button onclick="toggleSidebar()" class="p-2 text-gray-600 rounded-lg hover:bg-gray-100"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+            <span class="text-lg font-bold text-indigo-600">DigitalSkill</span>
+            <div class="w-8"></div> <!-- Spacer -->
+        </header>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            
+            <!-- Header Section -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900" id="page-title">Việc Làm Phù Hợp Nhất</h1>
+                    <p class="text-gray-500 mt-1">AI đã chọn lọc các cơ hội tốt nhất dựa trên kỹ năng của bạn.</p>
+                </div>
+                <div class="mt-4 md:mt-0 flex space-x-3">
+                    <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-50 transition shadow-sm flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4z"/></svg>
+                        Bộ lọc
+                    </button>
+                </div>
+            </div>
+
+            <!-- CONTENT AREA: JOBS -->
+            <div id="view-jobs" class="grid grid-cols-1 lg:grid-cols-1 gap-6">
+                <!-- Jobs rendered by JS -->
+            </div>
+
+            <!-- CONTENT AREA: COURSES (Hidden by default) -->
+            <div id="view-courses" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Courses rendered by JS -->
+            </div>
+
+        </div>
+    </main>
+
+    <!-- --- MODAL: AI CONTRACT PROCESS --- -->
+    <div id="contract-modal" class="fixed inset-0 bg-gray-900/70 z-50 hidden items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-bounce-in">
+            <div class="bg-indigo-600 p-4 flex justify-between items-center">
+                <h3 class="text-white font-bold text-lg flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    Trợ Lý AI DigitalSkill
+                </h3>
+                <button onclick="closeModal()" class="text-white/80 hover:text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+            </div>
+            
+            <div id="modal-body" class="p-6">
+                <!-- Dynamic Content Here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DỮ LIỆU GIẢ LẬP ---
+        const jobs = [
+            { id: 1, title: "Thiết kế Landing Page SaaS (Figma)", client: "TechStart Inc.", price: "5.000.000 VNĐ", time: "3 ngày", tags: ["UI/UX", "AI Gợi Ý"], difficulty: "Trung bình", desc: "Cần thiết kế LP hiện đại, conversion cao cho app quản lý tài chính." },
+            { id: 2, title: "Viết 10 bài Blog chuẩn SEO về AI", client: "Content King", price: "3.500.000 VNĐ", time: "5 ngày", tags: ["Content", "SEO"], difficulty: "Dễ", desc: "Viết bài về ứng dụng của AI trong Marketing, độ dài 1000 từ/bài." },
+            { id: 3, title: "Phát triển Chatbot CSKH (Python)", client: "E-Shop Global", price: "12.000.000 VNĐ", time: "10 ngày", tags: ["Python", "AI Gợi Ý"], difficulty: "Khó", desc: "Xây dựng bot trả lời tự động tích hợp OpenAI API." },
+        ];
+
+        const courses = [
+            { id: 101, title: "Làm chủ AI Prompt Engineering", price: "999.000 VNĐ", duration: "4h Video", rating: 4.8, students: 1200, image: "https://placehold.co/400x200/4f46e5/ffffff?text=AI+Course", tag: "Bán chạy" },
+            { id: 102, title: "Thiết kế UI/UX từ số 0 với Figma", price: "1.500.000 VNĐ", duration: "8h Video", rating: 4.9, students: 850, image: "https://placehold.co/400x200/ec4899/ffffff?text=Figma+Mastery", tag: "Nổi bật" },
+            { id: 103, title: "Freelance Business 101: Hợp đồng & Deal giá", price: "Miễn phí", duration: "2h Video", rating: 5.0, students: 3000, image: "https://placehold.co/400x200/10b981/ffffff?text=Freelance+Biz", tag: "Free" },
+        ];
+
+        let currentView = 'jobs';
+        let selectedJob = null;
+        let processingStep = 0;
+
+        // --- VIEW SWITCHING ---
+        function switchMainView(viewName) {
+            currentView = viewName;
+            const jobView = document.getElementById('view-jobs');
+            const courseView = document.getElementById('view-courses');
+            const pageTitle = document.getElementById('page-title');
+            const navJobs = document.getElementById('nav-jobs');
+            const navCourses = document.getElementById('nav-courses');
+
+            if (viewName === 'jobs') {
+                jobView.classList.remove('hidden');
+                courseView.classList.add('hidden');
+                pageTitle.textContent = "Việc Làm Phù Hợp Nhất";
+                
+                navJobs.classList.add('active', 'bg-indigo-600', 'text-white');
+                navJobs.classList.remove('text-gray-700', 'hover:bg-gray-100');
+                
+                navCourses.classList.remove('active', 'bg-indigo-600', 'text-white');
+                navCourses.classList.add('text-gray-700', 'hover:bg-gray-100');
+            } else {
+                jobView.classList.add('hidden');
+                courseView.classList.remove('hidden');
+                pageTitle.textContent = "Nâng Cấp Kỹ Năng Số";
+
+                navCourses.classList.add('active', 'bg-indigo-600', 'text-white');
+                navCourses.classList.remove('text-gray-700', 'hover:bg-gray-100');
+                
+                navJobs.classList.remove('active', 'bg-indigo-600', 'text-white');
+                navJobs.classList.add('text-gray-700', 'hover:bg-gray-100');
+            }
+            
+            // Close sidebar on mobile after click
+            if (window.innerWidth < 1024) toggleSidebar();
+        }
+
+        // --- RENDER FUNCTIONS ---
+        function renderJobs() {
+            const container = document.getElementById('view-jobs');
+            container.innerHTML = jobs.map(job => `
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 card-hover transition-all duration-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-2">
+                            <h3 class="text-lg font-bold text-gray-900">${job.title}</h3>
+                            ${job.tags.includes('AI Gợi Ý') ? '<span class="bg-indigo-100 text-indigo-700 text-xs px-2 py-1 rounded-full font-bold flex items-center"><svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>AI Gợi Ý</span>' : ''}
+                        </div>
+                        <p class="text-sm text-gray-500 mb-3">${job.client} • ${job.difficulty} • Deadline: <span class="text-red-500 font-medium">${job.time}</span></p>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">${job.desc}</p>
+                        <div class="flex gap-2">
+                            ${job.tags.map(t => `<span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">${t}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="w-full md:w-auto flex flex-row md:flex-col items-center md:items-end justify-between gap-3 md:gap-1">
+                        <span class="text-xl font-extrabold text-green-600">${job.price}</span>
+                        <button onclick="startAiProcess(${job.id})" class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-indigo-700 transition shadow-md w-1/2 md:w-full">
+                            Nhận Việc Ngay
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderCourses() {
+            const container = document.getElementById('view-courses');
+            container.innerHTML = courses.map(c => `
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden card-hover flex flex-col h-full">
+                    <div class="relative">
+                        <img src="${c.image}" class="w-full h-40 object-cover">
+                        <span class="absolute top-2 left-2 bg-white/90 backdrop-blur px-2 py-1 rounded-lg text-xs font-bold text-indigo-600 shadow-sm">${c.tag}</span>
+                    </div>
+                    <div class="p-5 flex-grow flex flex-col">
+                        <h3 class="font-bold text-gray-900 text-lg mb-2 line-clamp-2">${c.title}</h3>
+                        <div class="flex items-center text-xs text-gray-500 mb-4 space-x-3">
+                            <span class="flex items-center"><svg class="w-4 h-4 mr-1 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>${c.rating}</span>
+                            <span>•</span>
+                            <span>${c.duration}</span>
+                            <span>•</span>
+                            <span>${c.students} học viên</span>
+                        </div>
+                        <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
+                            <span class="font-extrabold text-green-600 text-lg">${c.price}</span>
+                            <button class="text-indigo-600 font-bold text-sm hover:underline">Xem chi tiết</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- AI CONTRACT LOGIC ---
+        function startAiProcess(jobId) {
+            selectedJob = jobs.find(j => j.id === jobId);
+            processingStep = 1;
+            const modal = document.getElementById('contract-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            renderModalContent();
+
+            // Simulate AI Steps
+            setTimeout(() => { processingStep = 2; renderModalContent(); }, 2000);
+            setTimeout(() => { processingStep = 3; renderModalContent(); }, 4500);
+        }
+
+        function renderModalContent() {
+            const container = document.getElementById('modal-body');
+            let content = '';
+            let width = '10%';
+
+            if (processingStep === 1) {
+                width = '30%';
+                content = `
+                    <div class="text-center py-8">
+                        <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                            <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900">AI Đang Phân Tích Yêu Cầu</h3>
+                        <p class="text-gray-500 mt-2">Đang kiểm tra độ phù hợp của hồ sơ và lịch sử tín nhiệm...</p>
+                    </div>
+                `;
+            } else if (processingStep === 2) {
+                width = '70%';
+                content = `
+                    <div class="text-center py-6">
+                        <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900">Tự Động Soạn Thảo Hợp Đồng</h3>
+                        <div class="mt-4 bg-gray-50 p-4 rounded-xl text-left border border-gray-200 text-sm space-y-2">
+                            <div class="flex justify-between"><span>Dự án:</span> <span class="font-bold text-gray-800">${selectedJob.title}</span></div>
+                            <div class="flex justify-between"><span>Giá trị:</span> <span class="font-bold text-green-600">${selectedJob.price}</span></div>
+                            <div class="flex justify-between"><span>Trạng thái tiền:</span> <span class="text-yellow-600 font-semibold"><svg class="w-3 h-3 inline mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>Đang khóa Escrow</span></div>
+                        </div>
+                    </div>
+                `;
+            } else if (processingStep === 3) {
+                width = '100%';
+                content = `
+                    <div class="text-center py-6">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900">Hợp Đồng Đã Được Ký!</h3>
+                        <p class="text-gray-500 mt-2 mb-6">Tiền đã được khóa an toàn. Bạn có thể bắt đầu làm việc ngay.</p>
+                        <button onclick="closeModal()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 transition shadow-lg">
+                            Vào Không Gian Làm Việc
+                        </button>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="w-full bg-gray-200 rounded-full h-1.5 mb-6">
+                    <div class="bg-indigo-600 h-1.5 rounded-full transition-all duration-500" style="width: ${width}"></div>
+                </div>
+                ${content}
+            `;
+        }
+
+        function closeModal() {
+            document.getElementById('contract-modal').classList.remove('flex');
+            document.getElementById('contract-modal').classList.add('hidden');
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('open');
+            if (sidebar.classList.contains('open')) {
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+                overlay.classList.add('opacity-50');
+            } else {
+                overlay.classList.remove('opacity-50');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        function switchMainView(viewName) {
+            // Update UI active states
+            if (viewName === 'jobs') {
+                document.getElementById('nav-jobs').classList.add('active');
+                document.getElementById('nav-courses').classList.remove('active');
+                document.getElementById('view-jobs').classList.remove('hidden');
+                document.getElementById('view-courses').classList.add('hidden');
+            } else {
+                document.getElementById('nav-courses').classList.add('active');
+                document.getElementById('nav-jobs').classList.remove('active');
+                document.getElementById('view-courses').classList.remove('hidden');
+                document.getElementById('view-jobs').classList.add('hidden');
+            }
+            // Close sidebar on mobile
+            if(window.innerWidth < 1024) toggleSidebar();
+        }
+
+        // Init
+        renderJobs();
+        renderCourses();
+    </script>
+</body>
+</html>
